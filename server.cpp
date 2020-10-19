@@ -45,8 +45,10 @@ int main() {
 			//buffe
 
       //Otherwise, the server responds
-      sendto(sockfd, (const char *)buffer, strlen(buffer),
+      int s = sendto(sockfd, (const char *)buffer, strlen(buffer),
         MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
+			if(s >= 0)
+				break;
     }
 
     //Receive the second client packet and its address information
@@ -56,11 +58,13 @@ int main() {
       buffer[n] = '\0';
 
       //Otherwise, the server responds
-      sendto(sockfd, (const char *)buffer, strlen(buffer),
+      int s = sendto(sockfd, (const char *)buffer, strlen(buffer),
         MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
+			if(s >= 0)
+				break;
     }
 
-
+		break; 
 	}
 	return 0;
 }
