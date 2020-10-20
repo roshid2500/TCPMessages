@@ -10,7 +10,7 @@
 #define PORT	 12551
 
 int main() {
-	int sockfd, n;
+	int sockfd, a, b;
 	socklen_t len;
 	char buffer[1024];
 	struct sockaddr_in servaddr, cliaddr1, cliaddr2;
@@ -33,38 +33,42 @@ int main() {
 		exit(1);
 	}
 
-  while (1) {
-		//Receive the first client packet and its address information
-    while(1){
-      n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
-        MSG_WAITALL, ( struct sockaddr *) &cliaddr1, &len);
-      buffer[n] = '\0';
+	//Connect with the two clients
+	int connections = 0;
+	int newCon1 = -1, newCon2 = -1;
+	while(connections != 2){
+		listen(sockfd, 3);
+		if(connections == 0)
+			newCon1 = accept(sockfd, (sockaddr *)&cliaddr1, &len);
+		if(connections == 1)
+			newCon2 = accept(sockfd, (sockaddr *)&cliaddr2, &len);
+		if (newCon2 != -1)
+			break;
+		if(newCon1 != -1 && connections == 0)
+			connections++;
+	 }
 
-			//std::string name = buffer;
-		  //memset(buffer, 0, 1024);
-			//buffe
+	int aFirst = 0;
 
-      //Otherwise, the server responds
-      int s = sendto(sockfd, (const char *)buffer, strlen(buffer),
-        MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
-			if(s >= 0)
+  while(1){
+  	switch((a = read(newCon1,buffer,1024) > 0 ) || (b = read(newCon2,buffer,1024) > 0 )){
+			case a:
+				std::string str = buffer;
+				memset(buffer, 0, 1024);
+				str = str + ' came first';
+				send(newCon1, str, str.length() + 1);
 				break;
-    }
+			case b:
+				std::string str = buffer;
+				memset(buffer, 0, 1024);
+				str = str + ' came first';
+				send(newCon2, str, str.length() + 1);
+				break
+			default:
+				continue;
+		}
 
-    //Receive the second client packet and its address information
-    while(1){
-      n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
-        MSG_WAITALL, ( struct sockaddr *) &cliaddr2, &len);
-      buffer[n] = '\0';
-
-      //Otherwise, the server responds
-      int s = sendto(sockfd, (const char *)buffer, strlen(buffer),
-        MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
-			if(s >= 0)
-				break;
-    }
-
-		break; 
 	}
+
 	return 0;
 }
