@@ -61,7 +61,7 @@ int main() {
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
 			read(fd_c1, buffer, sizeof(buffer));
 			puts(buffer);
-			if(strcmp(buffer,"Alice")){
+			if(strcmp(buffer,"Alice") == 0){
 				strcpy(buffer, str1);
 			}
 			else{
