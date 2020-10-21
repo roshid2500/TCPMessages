@@ -100,5 +100,6 @@ int main() {
 			break;
 	}
 	std::cout << "Sent acknowledgment to both X and Y" << std::endl;
+	close(sockfd);
 	return 0;
 }
