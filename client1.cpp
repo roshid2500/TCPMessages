@@ -17,11 +17,10 @@ int main() {
 	socklen_t len;
 	char buffer[1024] = "Alice";
 	struct sockaddr_in servaddr;
- 	struct timeval t;
 
-  	//set timeout val to 1
-  	t.tv_sec = 5;
-	  t.tv_usec = 0;
+	//set timeout val to 1
+	t.tv_sec = 5;
+	t.tv_usec = 0;
 
 	// Create a UDP socket
 	// Notice the use of SOCK_DGRAM for UDP packets
@@ -36,23 +35,20 @@ int main() {
 	servaddr.sin_port = htons(PORT); // port number
 	len = sizeof(servaddr);
 
-	//Set the timeout for the socket to 1sec
-	if(setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,(struct timeval *)&t,sizeof(struct timeval)) < 0){
-		cout << "Error setting timeout" << endl;
-		exit(1);
-	}
+ if(connect(sockfd, (struct sockaddr*) &servaddr, len) < 0){
+	 perror("Connect failed");
+ }
+	//Send the TCP packet to the server
+	int send = sendto(sockfd, (const char *)buffer, strlen(buffer),
+	MSG_CONFIRM, (const struct sockaddr *) &servaddr, len);
 
-  //Send the TCP packet to the server
-  int send = sendto(sockfd, (const char *)buffer, strlen(buffer),
-        MSG_CONFIRM, (const struct sockaddr *) &servaddr, len);
+	//receive packet
+	n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
+	MSG_WAITALL, ( struct sockaddr *) &servaddr, &len);
+	buffer[n] = '\0';
 
-  //receive packet
-  n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
-        MSG_WAITALL, ( struct sockaddr *) &servaddr, &len);
-  buffer[n] = '\0';
-
-  //print ACK message
-  std::cout << buffer << std::endl; 
+	//print ACK message
+	std::cout << buffer << std::endl;
 
 	return 0;
 }

@@ -10,22 +10,29 @@
 #define PORT	 12551
 
 int main() {
-	int sockfd, a, b;
+	int sockfd, rdy, b;
 	socklen_t len;
 	char buffer[1024];
 	struct sockaddr_in servaddr, cliaddr1, cliaddr2;
+	fd_set readfds;
 
 	// Create a UDP socket
 	// Notice the use of SOCK_DGRAM for UDP packets
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
 	memset(&servaddr, 0, sizeof(servaddr));
-	memset(&cliaddr, 0, sizeof(cliaddr));
+	memset(&cliaddr, 0, sizeof(cliaddr1));
+	memset(&cliaddr, 0, sizeof(cliaddr3));
 
   // Fill server information
   servaddr.sin_family = AF_INET; // IPv4
   servaddr.sin_addr.s_addr = INADDR_ANY; // localhost
   servaddr.sin_port = htons(PORT); // port number
+
+	if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *)&v, sizeof(v)) < 0 ){
+    perror("setsockopt");
+    exit(2);
+  }
 
   // Bind the socket with the server address
 	if(bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
@@ -34,38 +41,22 @@ int main() {
 	}
 
 	//Connect with the two clients
-	int connections = 0;
-	int newCon1 = -1, newCon2 = -1;
-	while(connections != 2){
-		listen(sockfd, 3);
-		if(connections == 0)
-			newCon1 = accept(sockfd, (sockaddr *)&cliaddr1, &len);
-		if(connections == 1)
-			newCon2 = accept(sockfd, (sockaddr *)&cliaddr2, &len);
-		if (newCon2 != -1)
-			break;
-		if(newCon1 != -1 && connections == 0)
-			connections++;
-	 }
+	if(listen(sockfd, 10) < 0){
+		perror("Listen");
+		exit(2);
+	}
 
-	int aFirst = 0;
-
+	int maxFd = sockfd + 1;
+	FD_ZERO(&readfds)
   while(1){
-  	switch((a = read(newCon1,buffer,1024) > 0 ) || (b = read(newCon2,buffer,1024) > 0 )){
-			case a:
-				std::string str = buffer;
-				memset(buffer, 0, 1024);
-				str = str + ' came first';
-				send(newCon1, str, str.length() + 1);
-				break;
-			case b:
-				std::string str = buffer;
-				memset(buffer, 0, 1024);
-				str = str + ' came first';
-				send(newCon2, str, str.length() + 1);
-				break
-			default:
-				continue;
+  	FD_SET(sockfd, &readfds)
+		rdy = select(maxFd, &readfds, NULL, NULL, NULL);
+
+		if(FD_ISSET(sockfd, &readfds)){
+			len = sizeof(cliaddr1);
+			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
+
+
 		}
 
 	}
