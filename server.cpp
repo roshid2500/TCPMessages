@@ -62,7 +62,7 @@ int main() {
 			len = sizeof(cliaddr1);
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
 			read(fd_c1, buffer, sizeof(buffer));
-			puts(buffer);
+			std::cout << "Received: " << buffer << std::endl;
 			if(strcmp(buffer,"Alice") == 0){
 				strcpy(buffer, str1);
 				choice = 0;
@@ -81,7 +81,7 @@ int main() {
 			len = sizeof(cliaddr1);
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
 			read(fd_c1, buffer, sizeof(buffer));
-			puts(buffer);
+			std::cout << "Received: " << buffer << std::endl; 
 			if(choice == 0){
 				strcpy(buffer, str1);
 			}
