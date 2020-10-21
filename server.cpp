@@ -58,6 +58,9 @@ int main() {
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
 			read(fd_c1, buffer, sizeof(buffer));
 			puts(buffer);
+			strcpy(buffer, "Congrats Alice");
+			sendto(fd_c1, (const char *)buffer, strlen(buffer),
+			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
 			close(fd_c1);
 		}
 
