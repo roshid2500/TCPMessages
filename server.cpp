@@ -77,7 +77,7 @@ int main() {
 		//second connection
 		if(FD_ISSET(sockfd, &readfds) && conn == 1){
 			len = sizeof(cliaddr1);
-			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr2, &len);
+			fd_c2 = accept(sockfd, (struct sockaddr*)&cliaddr2, &len);
 			read(fd_c1, buffer, sizeof(buffer));
 			std::cout << "Received: " << buffer << std::endl;
 
@@ -86,7 +86,7 @@ int main() {
 
 			sendto(fd_c1, (const char *)buffer, strlen(buffer),
 			MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
-			sendto(fd_c1, (const char *)buffer, strlen(buffer),
+			sendto(fd_c2, (const char *)buffer, strlen(buffer),
 			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
 
 			conn++;
