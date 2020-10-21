@@ -18,7 +18,7 @@ int main() {
 	char buffer[1024] = "Bob";
 	struct sockaddr_in servaddr;
 
-
+  memset(buffer, 0, 1024);
 	// Create a UDP socket
 	// Notice the use of SOCK_DGRAM for UDP packets
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
