@@ -45,6 +45,7 @@ int main() {
 		n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
 		MSG_WAITALL, ( struct sockaddr *) &servaddr, &len);
 		buffer[n] = '\0';
+		std::cout << n << std::endl; 
 
 		if(n != -1)
 			break;
