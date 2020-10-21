@@ -18,9 +18,6 @@ int main() {
 	char buffer[1024] = "Alice";
 	struct sockaddr_in servaddr;
 
-	//set timeout val to 1
-	t.tv_sec = 5;
-	t.tv_usec = 0;
 
 	// Create a UDP socket
 	// Notice the use of SOCK_DGRAM for UDP packets
@@ -39,7 +36,7 @@ int main() {
 	 perror("Connect failed");
  }
 	//Send the TCP packet to the server
-	int send = sendto(sockfd, (const char *)buffer, strlen(buffer),
+	send = sendto(sockfd, (const char *)buffer, strlen(buffer),
 	MSG_CONFIRM, (const struct sockaddr *) &servaddr, len);
 
 	//receive packet
