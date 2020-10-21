@@ -97,6 +97,6 @@ int main() {
 		if(conn == 2)
 			break;
 	}
-	std::cout << - "Sent acknowledgment to both X and Y" << std::endl;
+	std::cout << "Sent acknowledgment to both X and Y" << std::endl;
 	return 0;
 }
