@@ -50,7 +50,7 @@ int main() {
 	int maxFd = sockfd + 1;
 	FD_ZERO(&readfds);
   while(1){
-  	FD_SET(sockfd, &readfds)
+  	FD_SET(sockfd, &readfds);
 		rdy = select(maxFd, &readfds, NULL, NULL, NULL);
 
 		if(FD_ISSET(sockfd, &readfds)){
