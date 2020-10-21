@@ -77,11 +77,13 @@ int main() {
 			close(fd_c1);
 		}
 
+		memset(buffer, 0, 1024);
+
 		if(FD_ISSET(sockfd, &readfds) && conn == 1){
 			len = sizeof(cliaddr1);
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
 			read(fd_c1, buffer, sizeof(buffer));
-			std::cout << "Received: " << buffer << std::endl; 
+			std::cout << "Received: " << buffer << std::endl;
 			if(choice == 0){
 				strcpy(buffer, str1);
 			}
