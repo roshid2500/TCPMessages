@@ -11,7 +11,7 @@
 
 int main() {
 	// boolean v = true;
-	int sockfd, rdy, conn, fd_c1, choice;
+	int sockfd, rdy, conn, fd_c1, fd_c2, choice;
 	socklen_t len;
 	char buffer[1024];
 	char str1[100] = "X: Alice received before Y: Bob";
