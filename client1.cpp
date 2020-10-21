@@ -15,10 +15,11 @@ using namespace std;
 int main() {
 	int sockfd, n, send;
 	socklen_t len;
-	char buffer[1024] = "Alice";
+	char buffer[1024];
 	struct sockaddr_in servaddr;
 
 	memset(buffer, 0, 1024);
+	strcpy(buffer, "Alice");
 	// Create a UDP socket
 	// Notice the use of SOCK_DGRAM for UDP packets
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
