@@ -43,7 +43,7 @@ int main() {
 	n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
 	MSG_WAITALL, ( struct sockaddr *) &servaddr, &len);
 	buffer[n] = '\0';
-
+	memset(buffer, 0, 1024);
 	//print ACK message
 	std::cout << buffer << std::endl;
 	close(sockfd);

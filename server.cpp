@@ -55,7 +55,7 @@ int main() {
   while(1){
   	FD_SET(sockfd, &readfds);
 		rdy = select(maxFd, &readfds, NULL, NULL, NULL);
-
+		memset(buffer, 0, 1024);
 		if(FD_ISSET(sockfd, &readfds)){
 			len = sizeof(cliaddr1);
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
