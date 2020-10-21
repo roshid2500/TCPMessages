@@ -11,7 +11,7 @@
 
 int main() {
 	// boolean v = true;
-	int sockfd, rdy, b;
+	int sockfd, rdy, b fd_c1;
 	socklen_t len;
 	char buffer[1024];
 	struct sockaddr_in servaddr, cliaddr1, cliaddr2;
