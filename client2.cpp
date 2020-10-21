@@ -10,22 +10,20 @@
 #include <chrono>
 #define PORT	 12551
 
-using namespace std;
 
 int main() {
+	//var declarations
 	int sockfd, n, send;
 	socklen_t len;
 	char buffer[1024];
 	struct sockaddr_in servaddr;
 
-  memset(buffer, 0, 1024);
-  strcpy(buffer, "Bob");
-	// Create a UDP socket
-	// Notice the use of SOCK_DGRAM for UDP packets
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-
-
+	memset(buffer, 0, 1024);
 	memset(&servaddr, 0, sizeof(servaddr));
+	strcpy(buffer, "Bob");
+
+	//create TCP socket
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
 	// Fill server information
 	servaddr.sin_family = AF_INET; // IPv4
@@ -33,25 +31,25 @@ int main() {
 	servaddr.sin_port = htons(PORT); // port number
 	len = sizeof(servaddr);
 
- if(connect(sockfd, (struct sockaddr*) &servaddr, len) < 0){
-	 perror("Connect failed");
- }
+	//connect to server
+	if(connect(sockfd, (struct sockaddr*) &servaddr, len) < 0){
+		perror("Connect failed");
+	}
+
 	//Send the TCP packet to the server
 	send = sendto(sockfd, (const char *)buffer, strlen(buffer),
 	MSG_CONFIRM, (const struct sockaddr *) &servaddr, len);
 
-	//receive packet
+	//Keep running until receive ACK from server
 	while(1){
 		n = read(sockfd, buffer, sizeof(buffer));
-		std::cout << n << std::endl;
-
-		if(n > 0)
-			break;
+		if(n > 0) break;
 	}
+
 	//print ACK message
 	std::cout << buffer << std::endl;
 
-  memset(buffer, 0, 1024);
-	close(sockfd);
+	memset(buffer, 0, 1024);
+	close(sockfd);	//close client socket
 	return 0;
 }
