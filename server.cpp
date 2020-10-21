@@ -10,6 +10,7 @@
 #define PORT	 12551
 
 int main() {
+	// boolean v = true;
 	int sockfd, rdy, b;
 	socklen_t len;
 	char buffer[1024];
@@ -21,18 +22,18 @@ int main() {
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
 	memset(&servaddr, 0, sizeof(servaddr));
-	memset(&cliaddr, 0, sizeof(cliaddr1));
-	memset(&cliaddr, 0, sizeof(cliaddr3));
+	memset(&cliaddr1, 0, sizeof(cliaddr1));
+	memset(&cliaddr2, 0, sizeof(cliaddr2));
 
   // Fill server information
   servaddr.sin_family = AF_INET; // IPv4
   servaddr.sin_addr.s_addr = INADDR_ANY; // localhost
   servaddr.sin_port = htons(PORT); // port number
 
-	if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *)&v, sizeof(v)) < 0 ){
-    perror("setsockopt");
-    exit(2);
-  }
+	// if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *)&v, sizeof(v)) < 0 ){
+  //   perror("setsockopt");
+  //   exit(2);
+  // }
 
   // Bind the socket with the server address
 	if(bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
@@ -47,7 +48,7 @@ int main() {
 	}
 
 	int maxFd = sockfd + 1;
-	FD_ZERO(&readfds)
+	FD_ZERO(&readfds);
   while(1){
   	FD_SET(sockfd, &readfds)
 		rdy = select(maxFd, &readfds, NULL, NULL, NULL);
@@ -55,8 +56,9 @@ int main() {
 		if(FD_ISSET(sockfd, &readfds)){
 			len = sizeof(cliaddr1);
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
-
-
+			read(fd_c1, buffer, sizeof(buffer));
+			puts(buffer);
+			close(fd_c1);
 		}
 
 	}
