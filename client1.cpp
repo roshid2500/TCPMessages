@@ -42,9 +42,7 @@ int main() {
 
 	//receive packet
 	while(1){
-		n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
-		MSG_WAITALL, ( struct sockaddr *) &servaddr, &len);
-		buffer[n] = '\0';
+		n = read(sockfd, buffer, sizeof(buffer));
 		std::cout << n << std::endl;
 
 		if(n > 0)

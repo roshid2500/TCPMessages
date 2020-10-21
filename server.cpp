@@ -69,7 +69,6 @@ int main() {
 			else choice = 1;
 
 			conn++;
-			close(fd_c1);
 		}
 
 		memset(buffer, 0, 1024);	//clear buffer
@@ -78,7 +77,7 @@ int main() {
 		if(FD_ISSET(sockfd, &readfds) && conn == 1){
 			len = sizeof(cliaddr1);
 			fd_c2 = accept(sockfd, (struct sockaddr*)&cliaddr2, &len);
-			read(fd_c1, buffer, sizeof(buffer));
+			read(fd_c2, buffer, sizeof(buffer));
 			std::cout << "Received: " << buffer << std::endl;
 
 			if(choice == 0) strcpy(buffer, str1);
@@ -91,6 +90,7 @@ int main() {
 
 			conn++;
 			close(fd_c1);
+			close(fd_c2);
 		}
 
 		//break out of the loop once two connections made

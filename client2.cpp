@@ -42,12 +42,11 @@ int main() {
 
 	//receive packet
 	while(1){
-		n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
-		MSG_WAITALL, ( struct sockaddr *) &servaddr, &len);
-		buffer[n] = '\0';
+		n = read(sockfd, buffer, sizeof(buffer));
+		std::cout << n << std::endl;
 
-		if(n != -1)
-			break; 
+		if(n > 0)
+			break;
 	}
 	//print ACK message
 	std::cout << buffer << std::endl;
