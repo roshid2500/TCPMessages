@@ -57,49 +57,46 @@ int main() {
   	FD_SET(sockfd, &readfds);
 		rdy = select(maxFd, &readfds, NULL, NULL, NULL);
 		memset(buffer, 0, 1024);
+
 		//first connection
 		if(FD_ISSET(sockfd, &readfds) && conn == 0){
 			len = sizeof(cliaddr1);
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
 			read(fd_c1, buffer, sizeof(buffer));
 			std::cout << "Received: " << buffer << std::endl;
-			if(strcmp(buffer,"Alice") == 0){
-				strcpy(buffer, str1);
-				choice = 0;
-			}
-			else{
-				strcpy(buffer,str2);
-				choice = 1;
-			}
+
+			if(strcmp(buffer,"Alice") == 0) choice = 0;
+			else choice = 1;
+
 			conn++;
 			close(fd_c1);
 		}
 
-		memset(buffer, 0, 1024);
-
+		//second connection
 		if(FD_ISSET(sockfd, &readfds) && conn == 1){
 			len = sizeof(cliaddr1);
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr2, &len);
 			read(fd_c1, buffer, sizeof(buffer));
 			std::cout << "Received: " << buffer << std::endl;
-			if(choice == 0){
-				strcpy(buffer, str1);
-			}
-			else{
-				strcpy(buffer,str2);
-			}
-			sendto(fd_c1, (const char *)buffer, strlen(buffer),
-			MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
+
+			if(choice == 0) strcpy(buffer, str1);
+			else strcpy(buffer,str2);
 
 			sendto(fd_c1, (const char *)buffer, strlen(buffer),
-			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
+			MSG_WAITALL, (const struct sockaddr *) &cliaddr2, len);
+			sendto(fd_c1, (const char *)buffer, strlen(buffer),
+			MSG_WAITALL, (const struct sockaddr *) &cliaddr1, len);
+
 			conn++;
 			close(fd_c1);
 		}
 
+		//break out of the loop once two connections made
 		if(conn == 2)
 			break;
 	}
+
+
 	std::cout << "Sent acknowledgment to both X and Y" << std::endl;
 	close(sockfd);
 	return 0;
