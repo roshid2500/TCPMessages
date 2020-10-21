@@ -81,7 +81,7 @@ int main() {
 
 		if(FD_ISSET(sockfd, &readfds) && conn == 1){
 			len = sizeof(cliaddr1);
-			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
+			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr2, &len);
 			read(fd_c1, buffer, sizeof(buffer));
 			std::cout << "Received: " << buffer << std::endl;
 			if(choice == 0){
@@ -91,7 +91,7 @@ int main() {
 				strcpy(buffer,str2);
 			}
 			sendto(fd_c1, (const char *)buffer, strlen(buffer),
-			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
+			MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
 			conn++;
 			close(fd_c1);
 		}
