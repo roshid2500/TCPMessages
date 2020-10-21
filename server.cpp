@@ -71,8 +71,6 @@ int main() {
 				strcpy(buffer,str2);
 				choice = 1;
 			}
-			sendto(fd_c1, (const char *)buffer, strlen(buffer),
-			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
 			conn++;
 			close(fd_c1);
 		}
@@ -92,6 +90,9 @@ int main() {
 			}
 			sendto(fd_c1, (const char *)buffer, strlen(buffer),
 			MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
+
+			sendto(fd_c1, (const char *)buffer, strlen(buffer),
+			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
 			conn++;
 			close(fd_c1);
 		}
