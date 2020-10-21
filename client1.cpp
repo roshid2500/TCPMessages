@@ -41,9 +41,14 @@ int main() {
 	MSG_CONFIRM, (const struct sockaddr *) &servaddr, len);
 
 	//receive packet
-	n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
-	MSG_WAITALL, ( struct sockaddr *) &servaddr, &len);
-	buffer[n] = '\0';
+	while(1){
+		n = recvfrom(sockfd, (char *)buffer, sizeof(buffer),
+		MSG_WAITALL, ( struct sockaddr *) &servaddr, &len);
+		buffer[n] = '\0';
+
+		if(n != -1)
+			break;
+	}
 
 	//print ACK message
 	std::cout << buffer << std::endl;

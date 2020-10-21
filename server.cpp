@@ -56,7 +56,7 @@ int main() {
   while(1){
   	FD_SET(sockfd, &readfds);
 		rdy = select(maxFd, &readfds, NULL, NULL, NULL);
-		memset(buffer, 0, 1024);
+		memset(buffer, 0, 1024);	//clear buffer
 
 		//first connection
 		if(FD_ISSET(sockfd, &readfds) && conn == 0){
@@ -72,6 +72,8 @@ int main() {
 			close(fd_c1);
 		}
 
+		memset(buffer, 0, 1024);	//clear buffer
+
 		//second connection
 		if(FD_ISSET(sockfd, &readfds) && conn == 1){
 			len = sizeof(cliaddr1);
@@ -83,9 +85,9 @@ int main() {
 			else strcpy(buffer,str2);
 
 			sendto(fd_c1, (const char *)buffer, strlen(buffer),
-			MSG_WAITALL, (const struct sockaddr *) &cliaddr2, len);
+			MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
 			sendto(fd_c1, (const char *)buffer, strlen(buffer),
-			MSG_WAITALL, (const struct sockaddr *) &cliaddr1, len);
+			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
 
 			conn++;
 			close(fd_c1);
