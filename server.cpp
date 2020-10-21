@@ -11,9 +11,11 @@
 
 int main() {
 	// boolean v = true;
-	int sockfd, rdy, b, fd_c1;
+	int sockfd, rdy, conn, fd_c1;
 	socklen_t len;
 	char buffer[1024];
+	char str1[100] = "X: Alice received before Y: Bob";
+	char str2[100] = "Y: Bob received before X: Alice";
 	struct sockaddr_in servaddr, cliaddr1, cliaddr2;
 	fd_set readfds;
 
@@ -48,6 +50,7 @@ int main() {
 	}
 
 	int maxFd = sockfd + 1;
+	con = 0;
 	FD_ZERO(&readfds);
   while(1){
   	FD_SET(sockfd, &readfds);
@@ -58,9 +61,15 @@ int main() {
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
 			read(fd_c1, buffer, sizeof(buffer));
 			puts(buffer);
-			strcpy(buffer, "Congrats Alice");
+			if(strcmp(buffer,"Alice")){
+				strcpy(buffer, str1);
+			}
+			else{
+				strcpy(buffer,str2);
+			}
 			sendto(fd_c1, (const char *)buffer, strlen(buffer),
 			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
+			conn++;
 			close(fd_c1);
 		}
 
