@@ -49,6 +49,6 @@ int main() {
 
 	//print ACK message
 	std::cout << buffer << std::endl;
-
+	close(sockfd);
 	return 0;
 }
