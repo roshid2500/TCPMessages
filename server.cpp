@@ -11,7 +11,7 @@
 
 int main() {
 	// boolean v = true;
-	int sockfd, rdy, conn, fd_c1;
+	int sockfd, rdy, conn, fd_c1, choice;
 	socklen_t len;
 	char buffer[1024];
 	char str1[100] = "X: Alice received before Y: Bob";
@@ -51,17 +51,38 @@ int main() {
 
 	int maxFd = sockfd + 1;
 	conn = 0;
+	choice = 0;
 	FD_ZERO(&readfds);
   while(1){
   	FD_SET(sockfd, &readfds);
 		rdy = select(maxFd, &readfds, NULL, NULL, NULL);
 		memset(buffer, 0, 1024);
-		if(FD_ISSET(sockfd, &readfds)){
+		//first connection
+		if(FD_ISSET(sockfd, &readfds) && conn == 0){
 			len = sizeof(cliaddr1);
 			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
 			read(fd_c1, buffer, sizeof(buffer));
 			puts(buffer);
 			if(strcmp(buffer,"Alice") == 0){
+				strcpy(buffer, str1);
+				choice = 0;
+			}
+			else{
+				strcpy(buffer,str2);
+				choice = 1;
+			}
+			sendto(fd_c1, (const char *)buffer, strlen(buffer),
+			MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
+			conn++;
+			close(fd_c1);
+		}
+
+		if(FD_ISSET(sockfd, &readfds) && conn == 1){
+			len = sizeof(cliaddr1);
+			fd_c1 = accept(sockfd, (struct sockaddr*)&cliaddr1, &len);
+			read(fd_c1, buffer, sizeof(buffer));
+			puts(buffer);
+			if(choice == 0){
 				strcpy(buffer, str1);
 			}
 			else{
@@ -73,7 +94,9 @@ int main() {
 			close(fd_c1);
 		}
 
+		if(conn == 2)
+			break;
 	}
-
+	std::cout << - "Sent acknowledgment to both X and Y" << std::endl;
 	return 0;
 }
